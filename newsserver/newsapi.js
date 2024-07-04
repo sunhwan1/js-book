@@ -2,64 +2,62 @@ const express = require('express');
 const app = express();
 const axios = require('axios').default;
 
-const API_KEY = 'your api key';
+const API_KEY = '380ce161b7e444158a7e387fec0419d0';
 const getApiData = async () => {
-    return await axios.get(`https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=fc1037af1e2d45e28f055d296531586e&apikey=${API_KEY}`)
+    return await axios.get(`https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=${API_KEY}`)
                     .then(function(response) {
-                    console.log(response.data.articles);
-                    return response.data.articles;
-                   });
+                        console.log(response.data.articles);
+                        return response.data.articles;
+                    });
 }
 
-app.get('/', async (request, response) => {
-    // const data = [
-    //     {
-    //         title: 'title111',
-    //         author: 'author111',
-    //         publishedAt: '2024-07-03 15:56:33',
-    //         url: 'http://www.naver.com'
-    //     },
-    //     {
-    //         title: 'title222',
-    //         author: 'author222',
-    //         publishedAt: '2024-07-03 15:56:33',
-    //         url: 'http://www.daum.net'
-    //     },
-    //     {
-    //         title: 'title333',
-    //         author: 'author333',
-    //         publishedAt: '2024-07-03 15:56:33',
-    //         url: 'http://www.kakao.com'
-    //     }
-    // ];
+app.set('view engine', 'ejs');
+app.set('views', './views');
 
+app.get('/', async (req, res) => {
     const data = await getApiData();
-    let html = `
-        <html>
-        <body>
-        <div id='wrapper'>
-    `;
-
-    data.forEach(d => {
-        html += `
-        <p>뉴스데이터 제목(title): ${d.title}</p>
-        <p>뉴스데이터 작성자(author): ${d.author}</p>
-        <p>뉴스데이터 작성일(publishedAt): ${d.publishedAt}</p>
-        <a href='${d.url}'>뉴스데이터url(url)</a>
-        <hr/>
-        `;
+    res.render('index', {
+        one: "this is one",
+        two: "this is two",
+        data: data
     });
-
-    html += `
-        </div>
-        </body>
-        </html>
-    `;
-
-    response.send(html);
 });
+// app.get('/', async (request, response) => {
+//     // const data = [
+//     //     {
+//     //         title: 'title111',
+//     //         author: 'author111',
+//     //         publishedAt: '2024-07-03 15:56:33',
+//     //         url: 'http://www.naver.com'
+//     //     },
+//     //     {
+//     //         title: 'title222',
+//     //         author: 'author222',
+//     //         publishedAt: '2024-07-03 17:58:33',
+//     //         url: 'http://www.daum.com'
+//     //     },
+//     // ]
+//     const data = await getApiData();
+//     let html = '';
+//     data.forEach((d) => {
+//         html += `<p>${d.title}</p>
+//                 <p>${d.author}</p>
+//                 <p>${d.publishedAt}</p>
+//                 <a href=${d.url}>${d.url}</a>
+//                 <hr/>`;
+//     });
+//     response.send(`
+//         <html>
+//         <body>
+//           <div id='wrapper'>
+//           ${html}
+//           </div>
+//         </body>
+//         </html>
+//     `);
+// });
 
 const port = 8000;
 app.listen(port, () => {
     console.log(`server listening on port ${port}`);
-});
+})
